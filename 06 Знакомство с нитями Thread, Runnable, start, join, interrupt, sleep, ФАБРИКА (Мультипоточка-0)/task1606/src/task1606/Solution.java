@@ -31,6 +31,7 @@ public class Solution {
         PrintListThread firstThread = new PrintListThread("firstThread");
         PrintListThread secondThread = new PrintListThread("secondThread");
         firstThread.start();
+        firstThread.join(); // Добавил эту строку, в этом есть решение задачи.
         secondThread.start();
     }
 
