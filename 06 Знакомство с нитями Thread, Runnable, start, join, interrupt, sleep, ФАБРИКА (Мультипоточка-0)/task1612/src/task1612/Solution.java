@@ -24,17 +24,21 @@ public class Solution {
     public static volatile boolean isStopped = false;
 
     public static void main(String[] args) throws InterruptedException {
-        Runner ivanov = new Runner("Ivanov", 4);
-        Runner petrov = new Runner("Petrov", 2);
+        Runner ivanov = new Runner("Ivanov", 4); // 4 шага в секунду
+        Runner petrov = new Runner("Petrov", 2); // 2 шага в секунду
         //на старт!
         //внимание!
         //марш!
         ivanov.start();
         petrov.start();
-        Thread.sleep(2000);
-        isStopped = true;
-        Thread.sleep(1000);
+        Thread.sleep(2000); // ждем 2 секунды
+        isStopped = true;  // останавливаем бегунов
+        Thread.sleep(1000); // ждем, чтобы потоки завершились
+        System.out.println("\tСкорость бегуна 'Ivanov' = " + ivanov.speed); // дописанный метод
+        System.out.println("\tСкорость бегуна 'Petrov' = " + petrov.speed); // дописанный метод
     }
+
+
 
     public static class Stopwatch extends Thread {
         private Runner owner;
@@ -55,10 +59,13 @@ public class Solution {
 
         private void doStep() throws InterruptedException {
             stepNumber++;
-            //add your code here - добавь код тут
+
+            Thread.sleep(1000 / owner.getSpeed()); // Пауза в зависимости от скорости бегуна (шагов в секунду)
+
             System.out.println(owner.getName() + " делает шаг №" + stepNumber + "!");
         }
     }
+
 
     public static class Runner {
         Stopwatch stopwatch;
