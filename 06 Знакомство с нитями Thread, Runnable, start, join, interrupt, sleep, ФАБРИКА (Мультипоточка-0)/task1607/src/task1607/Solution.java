@@ -32,25 +32,34 @@ public class Solution {
 
     public static int calculateHorsesFinished(List<Horse> horses) throws InterruptedException {
         int finishedCount = 0;
-        //напишите тут ваш код
+        for(Horse horse: horses) { //   Мое решение начинается с этой строки
+            if (horse.isFinished()) {
+                finishedCount++;
+            } else {
+                System.out.println("Waiting for " + horse.getName());
+                horse.join();
+            }
+        }
+        System.out.println("Только что финишировала " + finishedCount + "-я лошадка");
         return finishedCount;
     }
 
     public static List<Horse> prepareHorsesAndStart(int horseCount) {
         List<Horse> horses = new ArrayList<>(horseCount);
         String number;
-        for (int i = 1; i < horseCount + 1; i++) {
+        for (int i = 1; i < horseCount + 1; i++) { // Даем лошадкам имена
             number = i < 10 ? ("0" + i) : "" + i;
             horses.add(new Horse("Horse_" + number));
         }
 
         System.out.println("All horses start the race!");
         for (int i = 0; i < horseCount; i++) {
-            horses.get(i).start();
+            horses.get(i).start(); // Запускаем потоки с "Лошадками" на выполнения
         }
         return horses;
     }
 }
+
 
 class Horse extends Thread {
 
