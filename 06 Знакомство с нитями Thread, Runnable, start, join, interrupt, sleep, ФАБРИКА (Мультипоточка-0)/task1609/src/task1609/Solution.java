@@ -18,7 +18,7 @@ Requirements:
 public class Solution {
     public static void main(String[] args) throws InterruptedException {
         Mouse alpha = new Mouse("#1");
-        alpha.join();
+//        alpha.join(); // удалив этот вызов - все мыши будут стартовать кушать одновременно
         Mouse mouse1 = new Mouse("#2");
         Mouse mouse2 = new Mouse("#3");
     }
