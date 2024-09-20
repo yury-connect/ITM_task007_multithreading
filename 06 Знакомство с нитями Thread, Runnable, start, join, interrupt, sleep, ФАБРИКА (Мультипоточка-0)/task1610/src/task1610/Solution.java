@@ -25,18 +25,26 @@ public class Solution {
     }
 
     private static void investigateWorld() {
-
+        try { // Обработаю возможную ошибку
+            Thread.sleep(200); // пауза на 200 мс спать,
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static class Cat extends Thread {
         protected Kitten kitten1;
         protected Kitten kitten2;
 
-        public Cat(String name) {
+        public Cat(String name) throws InterruptedException { // Пробрасываю возможную ошибку на следующий уровень
             super(name);
             kitten1 = new Kitten("Котенок 1, мама - " + getName());
             kitten2 = new Kitten("Котенок 2, мама - " + getName());
+
             start();
+
+            kitten1.join(200); // Отправляю котенка №1 спать на 200 мс
+            kitten2.join(200); // Отправляю котенка №2 спать на 200 мс
         }
 
         public void run() {
