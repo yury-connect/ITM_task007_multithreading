@@ -21,22 +21,26 @@ public class Solution {
         ThreadNamePrinter tnp = new ThreadNamePrinter();
         tnp.start();
         for (int i = 0; i < count; i++) {
-            tnp.printMsg();
+            tnp.printMsg(); // Возьмем главную нить и распечатаем её имя // ее имя (по умолчанию) будет 'main'
         }
     }
 
     public static class ThreadNamePrinter extends Thread {
         public void run() {
             for (int i = 0; i < count; i++) {
-                printMsg();
+                printMsg(); // Возьмем созданную нить и распечатаем её имя // ее имя (по умолчанию) будет 'Thread-0'
             }
         }
 
         public void printMsg() {
-            Thread t = null;//присвой переменной t текущую нить
+            Thread t = Thread.currentThread(); // t - текущая нить
             String name = t.getName();
             System.out.println("Name=" + name);
-            //add sleep here - добавь sleep тут
+            try {
+                sleep(10);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 }
