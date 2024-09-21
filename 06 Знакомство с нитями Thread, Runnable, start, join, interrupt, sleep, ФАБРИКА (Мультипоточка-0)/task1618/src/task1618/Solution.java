@@ -15,10 +15,33 @@ Requirements:
 
 public class Solution {
     public static void main(String[] args) throws InterruptedException {
-        //Add your code here - добавь код тут
+
+        TestThread thread = new TestThread();
+        System.out.printf("Start thread: '%s'\n", Thread.currentThread().getName());
+        thread.start();
+
+        Thread.sleep(2000); // Основной поток засыпает на *** мили_секунд
+        thread.interrupt();  // Прерываем thread через *** мили_секунд
     }
 
-    //Add your code below - добавь код ниже
-    public static class TestThread {
+    public static class TestThread extends Thread {
+
+        // в методе ниже код решения
+        @Override
+        public void run() {
+            System.out.println("I am TestThread. I am working here...");
+            Thread current = Thread.currentThread();
+            int counter = 0;
+
+            while (!current.interrupted()) {
+                try {
+                    System.out.printf("I'm still working... \tStep '%d'\n", ++counter);
+                    Thread.sleep(200);
+                } catch (InterruptedException e) {   // Когда Thread.sleep() вызывает InterruptedException, это означает, что поток был прерван во время сна.
+                    System.out.println("The stream was interrupted. Completing the work...");   // Сообщаем о завершении выполнение потока корректно при прерывании
+                    break;   // Выходим из цикла, т.к. Когда выбрасывается InterruptedException, флаг прерывания автоматически сбрасывается, т.е. interrupted = false
+                }
+            }
+        }
     }
 }
