@@ -31,16 +31,53 @@ public class Solution {
         public final List<String> notes = new ArrayList<String>();
 
         public void addNote(int index, String note) {
+            // Вывод в консоль вне синхронизации
             System.out.println("Сейчас будет добавлена заметка [" + note + "] На позицию " + index);
-            notes.add(index, note);
+
+            // Синхронизация на объекте notes
+            synchronized (notes) {
+                notes.add(index, note);
+            }
+
+            // Вывод в консоль вне синхронизации
             System.out.println("Уже добавлена заметка [" + note + "]");
         }
 
         public void removeNote(int index) {
+            // Вывод в консоль вне синхронизации
             System.out.println("Сейчас будет удалена заметка с позиции " + index);
-            String note = notes.remove(index);
+
+            String note;
+            // Синхронизация на объекте notes
+            synchronized (notes) {
+                note = notes.remove(index);
+            }
+
+            // Вывод в консоль вне синхронизации
             System.out.println("Уже удалена заметка [" + note + "] с позиции " + index);
         }
     }
-
 }
+
+
+
+
+
+
+/*
+Для выполнения задачи необходимо сделать обращения к листу notes синхронизированными,
+используя мьютекс самого объекта notes. Однако, команды вывода в консоль (System.out.println)
+не должны быть заблокированы с помощью synchronized.
+
+Решение:
+Добавим блоки synchronized в методы addNote и removeNote.
+Блокировка должна происходить на уровне самого объекта notes, а не this.
+Команды System.out.println будут находиться вне блока synchronized.
+
+Пояснение:
+Синхронизация: В методах addNote и removeNote добавлены блоки synchronized, которые блокируют объект notes, ч
+тобы гарантировать потокобезопасность при изменении списка.
+Команды вывода: Все вызовы System.out.println находятся вне синхронизированных блоков, как того требуют условия задачи.
+Это позволяет избежать излишней блокировки, которая может замедлить выполнение программы.
+Таким образом, код обеспечивает синхронизацию операций с коллекцией notes, избегая при этом блокировки вывода на консоль.
+ */
