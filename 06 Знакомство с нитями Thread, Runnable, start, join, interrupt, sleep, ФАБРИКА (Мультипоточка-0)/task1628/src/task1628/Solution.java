@@ -42,12 +42,16 @@ public class Solution {
         consoleReader2.start();
         consoleReader3.start();
 
+        // Ждем пока будет считано необходимое количество строк
         while (count > readStringCount.get()) {
         }
 
+        // Прерываем потоки
         consoleReader1.interrupt();
         consoleReader2.interrupt();
         consoleReader3.interrupt();
+
+        // Выводим результат
         System.out.println("#1:" + consoleReader1);
         System.out.println("#2:" + consoleReader2);
         System.out.println("#3:" + consoleReader3);
@@ -56,10 +60,23 @@ public class Solution {
     }
 
     public static class ReaderThread extends Thread {
-        private List<String> result = new ArrayList<String>();
+        private List<String> result = new ArrayList<>();
 
         public void run() {
-            //напишите тут ваш код
+            try {
+                while (!isInterrupted()) {
+                    // Чтение строки с консоли
+                    String line = reader.readLine();
+                    if (line != null) {
+                        result.add(line);
+
+                        // Увеличение счетчика считанных строк
+                        readStringCount.incrementAndGet();
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         @Override
@@ -68,3 +85,26 @@ public class Solution {
         }
     }
 }
+
+
+
+
+
+/*
+Для решения задачи необходимо реализовать метод run в классе ReaderThread,
+чтобы он читал строки из консоли, добавлял их в список result,
+и обновлял счетчик считанных строк с помощью AtomicInteger.
+
+
+Объяснение:
+Метод run в классе ReaderThread:
+
+Работает в цикле, пока нить не прервана (условие !isInterrupted()).
+Читает строки с консоли с помощью reader.readLine() и добавляет их в список result.
+После каждого успешного чтения строки увеличивает счетчик строк readStringCount с помощью метода incrementAndGet().
+В методе main:
+
+Программа ждет, пока все нити вместе не прочитают необходимое количество строк (используется цикл while (count > readStringCount.get())).
+После этого прерываются все нити с помощью метода interrupt(), что позволяет потокам корректно завершиться.
+Результаты, считанные каждой нитью, выводятся в консоль.
+ */
