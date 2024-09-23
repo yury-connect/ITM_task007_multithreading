@@ -27,6 +27,17 @@ import task1631.common.ImageTypes;
 
 public class Solution {
     public static void main(String[] args) {
-        ImageReader reader = ImageReaderFactory.getImageReader(ImageTypes.JPG);
+        ImageReader bmpReader = ImageReaderFactory.getImageReader(ImageTypes.BMP);
+        printRider(bmpReader);
+
+        ImageReader jpgReader = ImageReaderFactory.getImageReader(ImageTypes.JPG);
+        printRider(jpgReader);
+
+        ImageReader pngReader = ImageReaderFactory.getImageReader(ImageTypes.PNG);
+        printRider(pngReader);
+    }
+
+    private static void printRider(ImageReader reader) {
+        System.out.printf("Получен Reader для изображений : %s%n", reader.getClass().getSimpleName());
     }
 }
