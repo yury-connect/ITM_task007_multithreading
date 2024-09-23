@@ -30,3 +30,36 @@ public class Solution {
         ImageReader reader = ImageReaderFactory.getImageReader(ImageTypes.JPG);
     }
 }
+
+
+
+
+
+/*
+Для реализации задания нужно создать классы JpgReader, PngReader, BmpReader,
+которые будут реализовывать интерфейс ImageReader. Также нужно создать класс ImageReaderFactory,
+который будет предоставлять соответствующий reader на основе значения перечисления ImageTypes.
+
+Шаги:
+Создадим интерфейс ImageReader.
+Создадим классы JpgReader, PngReader, BmpReader, которые реализуют интерфейс ImageReader.
+Создадим класс ImageReaderFactory с методом getImageReader(), который возвращает нужный reader
+или выбрасывает исключение IllegalArgumentException при передаче некорректного значения.
+
+Структура проекта:
+- task1631/
+  - Solution.java
+  - ImageReaderFactory.java
+  - common/
+    - ImageReader.java
+    - ImageTypes.java
+    - JpgReader.java
+    - PngReader.java
+    - BmpReader.java
+
+Объяснение:
+Метод getImageReader принимает параметр типа ImageTypes
+и на его основе возвращает объект нужного класса, реализующего интерфейс ImageReader.
+Если передан некорректный тип или null,
+выбрасывается исключение IllegalArgumentException с сообщением "Неизвестный тип картинки".
+ */
