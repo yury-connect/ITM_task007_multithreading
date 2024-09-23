@@ -25,9 +25,10 @@ public class Solution {
     public volatile static int COUNT = 4;
 
     public static void main(String[] args) throws InterruptedException {
+        // Создаем и запускаем нити
         for (int i = 0; i < COUNT; i++) {
-            new SleepingThread();
-            //напишите тут ваш код
+            SleepingThread thread = new SleepingThread();
+            thread.join();  // Ждем завершения каждой нити перед началом следующей
         }
     }
 
@@ -36,15 +37,20 @@ public class Solution {
         private volatile int countdownIndex = COUNT;
 
         public SleepingThread() {
-            super(String.valueOf(++threadCount));
-            start();
+            super(String.valueOf(++threadCount));  // Назначаем имя нити
+            start();  // Запускаем нить
         }
 
         public void run() {
-            while (true) {
-                System.out.println(this);
-                if (--countdownIndex == 0) return;
-                //напишите тут ваш код
+            try {
+                // Выполняем цикл до тех пор, пока countdownIndex не станет 0
+                while (countdownIndex > 0) {
+                    System.out.println(this);  // Печатаем текущее состояние нити
+                    countdownIndex--;
+                    Thread.sleep(10);  // Пауза в 10 миллисекунд
+                }
+            } catch (InterruptedException e) {
+                System.out.println("Нить прервана");  // Обработка прерывания нити
             }
         }
 
@@ -53,3 +59,15 @@ public class Solution {
         }
     }
 }
+
+
+
+
+
+/*
+Объяснение изменений:
+В методе main добавлен вызов join() после создания каждой нити.
+Это заставляет основную нить ждать, пока каждая из создаваемых нитей завершит свое выполнение, прежде чем начинать следующую.
+В методе run() добавлена задержка с помощью Thread.sleep(10) для соответствия требованиям задачи.
+Добавлена обработка прерывания нити: если нить прервана, выводится сообщение "Нить прервана".
+ */
