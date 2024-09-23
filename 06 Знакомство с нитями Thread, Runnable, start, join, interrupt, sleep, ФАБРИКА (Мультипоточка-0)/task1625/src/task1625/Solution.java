@@ -21,15 +21,20 @@ public class Solution {
     static Thread t2 = new T2();
 
     public static void main(String[] args) throws InterruptedException {
+        // Запускаем нити
         t1.start();
         t2.start();
+
+        // Прерываем одну из нитей, чтобы предотвратить взаимную блокировку
+        Thread.sleep(100);  // Краткая задержка для того, чтобы обе нити начали выполнение
+        t1.interrupt();  // Прерываем нить t1
     }
 
     public static class T1 extends Thread {
         @Override
         public void run() {
             try {
-                t2.join();
+                t2.join();  // Ожидание завершения нити t2
                 System.out.println("T1 finished");
             } catch (InterruptedException e) {
                 System.out.println("T1 was interrupted");
@@ -41,7 +46,7 @@ public class Solution {
         @Override
         public void run() {
             try {
-                t1.join();
+                t1.join();  // Ожидание завершения нити t1
                 System.out.println("T2 finished");
             } catch (InterruptedException e) {
                 System.out.println("T2 was interrupted");
@@ -50,3 +55,16 @@ public class Solution {
     }
 }
 
+
+
+
+
+/*
+Объяснение изменений:
+Добавлено прерывание нити t1: В методе main после того, как обе нити начали выполнение,
+t1 прерывается с помощью метода interrupt(). Это позволит нити T1 выйти из состояния ожидания (join()),
+что предотвращает взаимную блокировку.
+Задержка перед прерыванием: Чтобы дать нитям время начать выполнение,
+добавлена краткая задержка Thread.sleep(100), чтобы обе нити успели запуститься до прерывания.
+В результате программа завершится без взаимной блокировки, и вывод будет состоять из двух строк: о завершении T1 и T2.
+ */
