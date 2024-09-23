@@ -1,5 +1,6 @@
 package task1710;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -55,15 +56,69 @@ Requirements:
 6. При запуске программы с параметром -d программа должна логически удалять человека с заданным id в списке allPeople.
 */
 
+
 public class Solution {
-    public static List<Person> allPeople = new ArrayList<Person>();
+    public static List<Person> allPeople = new ArrayList<>();
 
     static {
         allPeople.add(Person.createMale("Иванов Иван", new Date()));  //сегодня родился    id=0
         allPeople.add(Person.createMale("Петров Петр", new Date()));  //сегодня родился    id=1
     }
 
-    public static void main(String[] args) {
-        //напишите тут ваш код
+    public static void main(String[] args) throws ParseException {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+        SimpleDateFormat outputDateFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH);
+
+        switch (args[0]) {
+            case "-c": // добавление нового человека
+                String name = args[1];
+                Sex sex = "м".equals(args[2]) ? Sex.MALE : Sex.FEMALE;
+                Date birthDate = dateFormat.parse(args[3]);
+                Person person = sex == Sex.MALE ? Person.createMale(name, birthDate) : Person.createFemale(name, birthDate);
+                allPeople.add(person);
+                System.out.println(allPeople.size() - 1); // выводим индекс нового человека
+                break;
+
+            case "-r": // чтение данных о человеке
+                int id = Integer.parseInt(args[1]);
+                Person readPerson = allPeople.get(id);
+                String sexString = readPerson.getSex() == Sex.MALE ? "м" : "ж";
+                System.out.println(readPerson.getName() + " " + sexString + " " + outputDateFormat.format(readPerson.getBirthDate()));
+                break;
+
+            case "-u": // обновление данных человека
+                id = Integer.parseInt(args[1]);
+                name = args[2];
+                sex = "м".equals(args[3]) ? Sex.MALE : Sex.FEMALE;
+                birthDate = dateFormat.parse(args[4]);
+                Person updatePerson = allPeople.get(id);
+                updatePerson.setName(name);
+                updatePerson.setSex(sex);
+                updatePerson.setBirthDate(birthDate);
+                break;
+
+            case "-d": // логическое удаление человека
+                id = Integer.parseInt(args[1]);
+                Person deletePerson = allPeople.get(id);
+                deletePerson.setName(null);
+                deletePerson.setSex(null);
+                deletePerson.setBirthDate(null);
+                break;
+
+            default:
+                System.out.println("Неверный параметр");
+                break;
+        }
     }
 }
+
+
+
+
+
+/*
+Для реализации функционала CRUD в программе, в классе Solution нужно дополнить метод main
+логикой для обработки команд -c, -r, -u, -d. Давайте пошагово разберём, как добавить нужный функционал.
+
+
+ */
