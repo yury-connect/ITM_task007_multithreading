@@ -17,10 +17,10 @@ Requirements:
 4. Все методы класса Beach, кроме метода main, должны быть синхронизированы.
 */
 
-public class Beach {
-    private String name;      //название
-    private float distance;   //расстояние
-    private int quality;    //качество
+public class Beach implements Comparable<Beach> {
+    private String name;      // название
+    private float distance;   // расстояние
+    private int quality;      // качество
 
     public Beach(String name, float distance, int quality) {
         this.name = name;
@@ -28,31 +28,73 @@ public class Beach {
         this.quality = quality;
     }
 
-    public String getName() {
+    public synchronized String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public synchronized void setName(String name) {
         this.name = name;
     }
 
-    public float getDistance() {
+    public synchronized float getDistance() {
         return distance;
     }
 
-    public void setDistance(float distance) {
+    public synchronized void setDistance(float distance) {
         this.distance = distance;
     }
 
-    public int getQuality() {
+    public synchronized int getQuality() {
         return quality;
     }
 
-    public void setQuality(int quality) {
+    public synchronized void setQuality(int quality) {
         this.quality = quality;
     }
 
-    public static void main(String[] args) {
+    @Override
+    public synchronized int compareTo(Beach other) {
+        int qualityComparison = Integer.compare(this.quality, other.quality);
+        int distanceComparison = Float.compare(other.distance, this.distance); // чем меньше расстояние, тем лучше пляж
 
+        // Победителем станет пляж с лучшими показателями
+        return qualityComparison + distanceComparison;
+    }
+
+    public static void main(String[] args) {
+        // Пример использования
+        Beach beach1 = new Beach("Beach1", 5.0f, 8);
+        Beach beach2 = new Beach("Beach2", 7.0f, 7);
+
+        System.out.println(beach1.compareTo(beach2)); // Вывод зависит от значений distance и quality
     }
 }
+
+
+
+
+
+/*
+Для решения задачи, нужно реализовать интерфейс Comparable<Beach>, а также синхронизировать методы класса Beach,
+чтобы они могли безопасно использоваться в многопоточной среде.
+
+Шаги:
+Реализовать метод compareTo(Beach other) для сравнения пляжей.
+
+Сравнить пляжи по двум критериям: качество (quality) и расстояние (distance).
+Чем выше качество, тем лучше пляж.
+Чем меньше расстояние, тем лучше пляж.
+Синхронизировать все методы, кроме метода main.
+
+
+Объяснение:
+Метод compareTo(Beach other):
+
+Сравниваем пляжи по качеству (quality) — чем выше качество, тем лучше.
+Сравниваем по расстоянию (distance) — чем меньше расстояние, тем лучше пляж.
+Итоговый результат — сумма сравнений. Если пляж с меньшим расстоянием и большим качеством, он будет "лучше".
+Синхронизация методов:
+
+Методы getName, setName, getDistance, setDistance, getQuality, и setQuality синхронизированы для безопасного использования в многопоточной среде.
+Теперь программа будет корректно сравнивать пляжи и поддерживать потокобезопасность.
+ */
