@@ -26,15 +26,55 @@ Requirements:
 
 public class Solution {
 
-
     public static void main(String[] args) {
-
+        // Пример использования
+        Garden garden = new Garden();
+        garden.addFruit(0, "Apple");
+        garden.addVegetable(0, "Carrot");
     }
 
     public static class Garden {
 
-        public final List<String> fruits = new ArrayList<String>();
-        public final List<String> vegetables = new ArrayList<String>();
+        public final List<String> fruits = new ArrayList<>();
+        public final List<String> vegetables = new ArrayList<>();
 
+        // Добавление фрукта с синхронизацией
+        public synchronized void addFruit(int index, String fruit) {
+            fruits.add(index, fruit);
+        }
+
+        // Удаление фрукта с синхронизацией
+        public synchronized void removeFruit(int index) {
+            fruits.remove(index);
+        }
+
+        // Добавление овоща с синхронизацией
+        public synchronized void addVegetable(int index, String vegetable) {
+            vegetables.add(index, vegetable);
+        }
+
+        // Удаление овоща с синхронизацией
+        public synchronized void removeVegetable(int index) {
+            vegetables.remove(index);
+        }
     }
 }
+
+
+
+
+
+/*
+Для выполнения задачи, нужно создать методы для добавления и удаления элементов в/из списков fruits и vegetables,
+а также сделать так, чтобы каждый из этих методов был синхронизирован на уровне объекта (this).
+
+Решение:
+Добавим методы addFruit, removeFruit, addVegetable, и removeVegetable.
+Все методы должны быть синхронизированы на объекте (this), чтобы они могли использоваться в многопоточном окружении безопасно.
+Пояснение:
+Методы синхронизированы: Все методы addFruit, removeFruit, addVegetable, и removeVegetable объявлены с модификатором synchronized, что обеспечивает блокировку на уровне объекта this. Это гарантирует, что только одна нить может одновременно изменять состояние объекта Garden.
+
+Минимизация кода: Мы используем синхронизацию на уровне метода (через ключевое слово synchronized), что минимизирует количество кода и делает реализацию простой и понятной.
+
+Таким образом, все операции с фруктами и овощами теперь безопасны для многопоточного использования.
+ */
