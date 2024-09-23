@@ -37,9 +37,70 @@ public class Solution {
     public static List<String> forRemoveLines = new ArrayList<String>();
 
     public static void main(String[] args) {
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new InputStreamReader(System.in));
+
+            // Считываем имена файлов
+            String file1 = reader.readLine();
+            String file2 = reader.readLine();
+
+            // Читаем строки из первого файла в allLines
+            BufferedReader fileReader1 = new BufferedReader(new FileReader(file1));
+            String line;
+            while ((line = fileReader1.readLine()) != null) {
+                allLines.add(line);
+            }
+            fileReader1.close();
+
+            // Читаем строки из второго файла в forRemoveLines
+            BufferedReader fileReader2 = new BufferedReader(new FileReader(file2));
+            while ((line = fileReader2.readLine()) != null) {
+                forRemoveLines.add(line);
+            }
+            fileReader2.close();
+
+            // Вызываем метод joinData
+            new Solution().joinData();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (reader != null) {
+                    reader.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void joinData() throws CorruptedDataException {
-
+        if (allLines.containsAll(forRemoveLines)) {
+            allLines.removeAll(forRemoveLines);
+        } else {
+            allLines.clear();
+            throw new CorruptedDataException();
+        }
     }
 }
+
+
+
+
+
+/*
+Для реализации метода joinData в классе Solution нужно выполнить следующие шаги:
+
+Чтение файлов: Чтение двух файлов построчно и сохранение содержимого первого файла
+в список allLines, а второго — в список forRemoveLines.
+
+Логика транзакционности:
+
+Если все строки из forRemoveLines присутствуют в allLines, удаляем их из allLines.
+Если хотя бы одной строки из forRemoveLines нет в allLines, очищаем allLines и выбрасываем исключение CorruptedDataException.
+Закрытие потоков: Не забудьте закрыть файловые потоки после чтения данных.
+
+
+ */
