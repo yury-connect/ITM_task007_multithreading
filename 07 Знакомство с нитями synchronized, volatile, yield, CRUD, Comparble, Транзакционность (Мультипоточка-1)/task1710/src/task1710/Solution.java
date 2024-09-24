@@ -53,21 +53,24 @@ Requirements:
 6. При запуске программы с параметром -d программа должна логически удалять человека с заданным id в списке allPeople.
 */
 
+
 /*
 Тестируем функционал   'Create'.   Для этого в параметрах запуска вводим:
 -c Пугачева_Алла ж 4/10/56
 
-Тестируем функционал   'Read.   Для этого в параметрах запуска вводим:
+Тестируем функционал   'Read'.   Для этого в параметрах запуска вводим:
 -r 1
 
-Тестируем функционал   'Update.   Для этого в параметрах запуска вводим:
+Тестируем функционал   'Update'.   Для этого в параметрах запуска вводим:
 -u 1 Пугачева_Алла ж 4/10/56
 
-Тестируем функционал   'Delete.   Для этого в параметрах запуска вводим:
+Тестируем функционал   'Delete'.   Для этого в параметрах запуска вводим:
 -d 1
  */
+
 public class Solution {
     public static List<Person> allPeople = new ArrayList<Person>();
+    public static SimpleDateFormat outputDateFormat = new SimpleDateFormat("dd-MMMM-yyyy", Locale.ENGLISH);
 
     static {
         allPeople.add(Person.createMale("Иванов Иван", new Date()));  //сегодня родился    id=0
@@ -78,11 +81,10 @@ public class Solution {
     }
 
     public static void main(String[] args) throws ParseException {
-        //напишите тут ваш код
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
-        SimpleDateFormat outputDateFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH);
+//        SimpleDateFormat outputDateFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH);   // Сделал статической, чтобы была видна из class Person
 
-        System.out.println("\tВывожу базовый (исходный) список людей:");
+        System.out.println("\n\tВывожу базовый (исходный) список людей:");
         print();
 
         switch (args[0]) {

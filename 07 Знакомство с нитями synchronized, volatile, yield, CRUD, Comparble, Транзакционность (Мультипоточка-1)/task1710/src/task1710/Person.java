@@ -50,7 +50,7 @@ public class Person {
         return "Person{" +
                 "name='" + name + '\'' +
                 ", sex=" + sex +
-                ", birthDate=" + birthDate +
+                ", birthDate=" + Solution.outputDateFormat.format(birthDate) +
                 '}';
     }
 }
