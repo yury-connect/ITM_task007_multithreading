@@ -1,10 +1,8 @@
 package task1710;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 /* 
 CRUD
@@ -55,15 +53,81 @@ Requirements:
 6. При запуске программы с параметром -d программа должна логически удалять человека с заданным id в списке allPeople.
 */
 
+/*
+-c Пугачева_Алла ж 4/10/56
+
+ */
 public class Solution {
     public static List<Person> allPeople = new ArrayList<Person>();
 
     static {
         allPeople.add(Person.createMale("Иванов Иван", new Date()));  //сегодня родился    id=0
         allPeople.add(Person.createMale("Петров Петр", new Date()));  //сегодня родился    id=1
+        allPeople.add(Person.createMale("Сидоров Сидр", new Date(45, 04, 9)));  //родился 09/05/1945    id=2
+        allPeople.add(Person.createMale("Ленин Владимир", new Date(33, 10, 27)));  // родился 27/11/1933    id=3
+        allPeople.add(Person.createMale("Сталин Иосиф", new Date(11, 11, 31)));  //родился 31/12/1911   id=4
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ParseException {
         //напишите тут ваш код
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+        SimpleDateFormat outputDateFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH);
+
+        System.out.println("\tВывожу базовый (исходный) список людей:");
+        print();
+
+        switch (args[0]) {
+            case "-c": // добавление нового человека
+                System.out.println("\t Create.");
+                String name = args[1];
+                Sex sex = "м".equals(args[2].toLowerCase().trim()) ? Sex.MALE : Sex.FEMALE;
+                Date birthDate = dateFormat.parse(args[3]);
+                Person person = sex == Sex.MALE ? Person.createMale(name, birthDate) : Person.createFemale(name, birthDate);
+                allPeople.add(person);
+                System.out.println("\tДобавлена персона:\n\t" + person);
+                System.out.println(allPeople.size() - 1); // выводим индекс нового человека
+                break;
+
+            case "-r": // чтение данных о человеке
+                System.out.println("\t Read.");
+                int id = Integer.parseInt(args[1]);
+                Person readPerson = allPeople.get(id);
+                String sexString = readPerson.getSex() == Sex.MALE ? "м" : "ж";
+                System.out.println(readPerson.getName() + " " + sexString + " " + outputDateFormat.format(readPerson.getBirthDate()));
+                break;
+
+            case "-u": // обновление данных человека
+                System.out.println("\t Update.");
+                id = Integer.parseInt(args[1]);
+                name = args[2];
+                sex = "м".equals(args[3]) ? Sex.MALE : Sex.FEMALE;
+                birthDate = dateFormat.parse(args[4]);
+                Person updatePerson = allPeople.get(id);
+                updatePerson.setName(name);
+                updatePerson.setSex(sex);
+                updatePerson.setBirthDate(birthDate);
+                break;
+
+            case "-d": // логическое удаление человека
+                System.out.println("\t Delete.");
+                id = Integer.parseInt(args[1]);
+                Person deletePerson = allPeople.get(id);
+                deletePerson.setName(null);
+                deletePerson.setSex(null);
+                deletePerson.setBirthDate(null);
+                break;
+
+            default:
+                System.out.println("Неверный параметр");
+                break;
+        }
+
+
+        System.out.println("\n\tВывожу список людей после обработки:");
+        print();
+    }
+
+    public static void print() {
+        allPeople.stream().forEach(person -> System.out.println(person));
     }
 }
