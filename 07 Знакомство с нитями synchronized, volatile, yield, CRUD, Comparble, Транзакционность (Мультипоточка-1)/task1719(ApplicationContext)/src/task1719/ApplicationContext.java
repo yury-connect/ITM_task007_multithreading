@@ -17,25 +17,29 @@ Requirements:
 */
 
 public abstract class ApplicationContext<GenericsBean extends Bean> {
-    private Map<String, GenericsBean> container = new HashMap<String, GenericsBean>();
+    private final Map<String, GenericsBean> container = new HashMap<>(); // Поле container объявлено final для повышения безопасности
     // Map<Name, some class that implements the Bean interface>
+
 
 
     protected ApplicationContext() {
         parseAllClassesAndInterfaces();
     }
 
-    public GenericsBean getByName(String name) {
+    public synchronized GenericsBean getByName(String name) { // Синхронизируем доступ к контейнеру при получении значения
         return container.get(name);
     }
 
-    public GenericsBean removeByName(String name) {
+    public synchronized GenericsBean removeByName(String name) { // Синхронизируем...
         return container.remove(name);
     }
 
     protected abstract void parseAllClassesAndInterfaces();
 
     public static void main(String[] args) {
-
+        /*
+        getByName и removeByName теперь синхронизированы
+        Теперь ApplicationContext потокобезопасен, и доступ к контейнеру будет контролироваться.
+         */
     }
 }
