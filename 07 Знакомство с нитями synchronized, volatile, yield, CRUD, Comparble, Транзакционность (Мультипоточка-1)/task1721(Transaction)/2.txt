@@ -1,0 +1,3 @@
+allLines line 1
+allLines line 3
+allLines line 5

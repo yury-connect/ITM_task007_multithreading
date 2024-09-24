@@ -2,9 +2,11 @@ package task1721;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /* 
 Транзакционность
@@ -32,14 +34,51 @@ Requirements:
 9. Метод joinData должен вызываться в main.
 */
 
+
 public class Solution {
-    public static List<String> allLines = new ArrayList<String>();
-    public static List<String> forRemoveLines = new ArrayList<String>();
+    public static List<String> allLines = new ArrayList<>();
+    public static List<String> forRemoveLines = new ArrayList<>();
 
     public static void main(String[] args) {
+        System.out.println(System.getProperty("user.dir")); // выведет текущий путь от корня диска до корня проекта
+        final String path = System.getProperty("user.dir") + "/07 Знакомство с нитями synchronized, volatile, yield, CRUD, Comparble, Транзакционность (Мультипоточка-1)/task1721(Transaction)/";
+
+        System.out.println("Введите название файла с данными (источника) и файла с данными для удаления.\n"
+                + "ПОДСКАЗКА: Сейчас нужно ввести '1.txt' и '2.txt' соответственно.");
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+             BufferedReader fileReader1 = new BufferedReader(new FileReader(path + reader.readLine()));
+             BufferedReader fileReader2 = new BufferedReader(new FileReader(path + reader.readLine()))) {
+            String line;
+
+            while ((line = fileReader1.readLine()) != null) {
+                allLines.add(line); // Читаем строки из первого файла в allLines
+            }
+
+            while ((line = fileReader2.readLine()) != null) {
+                forRemoveLines.add(line); // Читаем строки из второго файла в forRemoveLines
+            }
+
+            new Solution().joinData(); // Вызываем метод joinData
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        System.out.println("\n\tallLines:");
+        allLines.stream().forEach(System.out::println);
+
+        System.out.println("\n\tforRemoveLines:");
+        forRemoveLines.stream().forEach(System.out::println);
     }
 
     public void joinData() throws CorruptedDataException {
+        if (allLines.containsAll(forRemoveLines)) {
+            allLines.removeAll(forRemoveLines);
+        } else {
+            allLines.clear();
+            String allLinesString = allLines.stream().collect(Collectors.joining("\n")); // Преобразование с разделением пробелом
+            String forRemoveLinesString = forRemoveLines.stream().collect(Collectors.joining("\n")); // Преобразование с разделением пробелом
 
+            throw new CorruptedDataException("allLines = " + allLinesString + ",\n forRemoveLines = " + forRemoveLinesString); // запишу в исключение всю информацию
+        }
     }
 }
