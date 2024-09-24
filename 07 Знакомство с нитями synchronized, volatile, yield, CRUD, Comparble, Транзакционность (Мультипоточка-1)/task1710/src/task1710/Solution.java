@@ -54,8 +54,17 @@ Requirements:
 */
 
 /*
+Тестируем функционал   'Create'.   Для этого в параметрах запуска вводим:
 -c Пугачева_Алла ж 4/10/56
 
+Тестируем функционал   'Read.   Для этого в параметрах запуска вводим:
+-r 1
+
+Тестируем функционал   'Update.   Для этого в параметрах запуска вводим:
+-u 1 Пугачева_Алла ж 4/10/56
+
+Тестируем функционал   'Delete.   Для этого в параметрах запуска вводим:
+-d 1
  */
 public class Solution {
     public static List<Person> allPeople = new ArrayList<Person>();
@@ -78,7 +87,7 @@ public class Solution {
 
         switch (args[0]) {
             case "-c": // добавление нового человека
-                System.out.println("\t Create.");
+                System.out.println("\n\t Create.");
                 String name = args[1];
                 Sex sex = "м".equals(args[2].toLowerCase().trim()) ? Sex.MALE : Sex.FEMALE;
                 Date birthDate = dateFormat.parse(args[3]);
@@ -89,7 +98,7 @@ public class Solution {
                 break;
 
             case "-r": // чтение данных о человеке
-                System.out.println("\t Read.");
+                System.out.println("\n\t Read.");
                 int id = Integer.parseInt(args[1]);
                 Person readPerson = allPeople.get(id);
                 String sexString = readPerson.getSex() == Sex.MALE ? "м" : "ж";
@@ -97,7 +106,7 @@ public class Solution {
                 break;
 
             case "-u": // обновление данных человека
-                System.out.println("\t Update.");
+                System.out.println("\n\t Update.");
                 id = Integer.parseInt(args[1]);
                 name = args[2];
                 sex = "м".equals(args[3]) ? Sex.MALE : Sex.FEMALE;
@@ -108,8 +117,8 @@ public class Solution {
                 updatePerson.setBirthDate(birthDate);
                 break;
 
-            case "-d": // логическое удаление человека
-                System.out.println("\t Delete.");
+            case "-d": // логическое удаление человека (зануляю все поля)
+                System.out.println("\n\t Delete.");
                 id = Integer.parseInt(args[1]);
                 Person deletePerson = allPeople.get(id);
                 deletePerson.setName(null);
@@ -122,12 +131,11 @@ public class Solution {
                 break;
         }
 
-
         System.out.println("\n\tВывожу список людей после обработки:");
         print();
     }
 
     public static void print() {
-        allPeople.stream().forEach(person -> System.out.println(person));
+        allPeople.forEach(System.out::println);
     }
 }
