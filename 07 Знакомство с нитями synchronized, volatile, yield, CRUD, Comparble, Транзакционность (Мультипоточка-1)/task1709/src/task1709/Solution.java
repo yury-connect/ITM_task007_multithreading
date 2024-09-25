@@ -13,15 +13,19 @@ Requirements:
 5. Переменная int proposal не должна находится в локальном кэше.
 */
 
+
 public class Solution {
-    public static int proposal = 0;
+    public static volatile int proposal = 0; // Помечаем переменную volatile для предотвращения кэширования
+
 
     public static void main(String[] args) {
         new AcceptProposal().start();
         new MakeProposal().start();
     }
 
+
     public static class MakeProposal extends Thread {
+
         @Override
         public void run() {
             int thisProposal = proposal;
@@ -34,23 +38,22 @@ public class Solution {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-
-
             }
         }
     }
 
+
     public static class AcceptProposal extends Thread {
+
         @Override
         public void run() {
             int thisProposal = proposal;
 
             while (thisProposal < 10) {
-                if (thisProposal != proposal) {
+                if (thisProposal != proposal) { // Проверяем, изменилось ли предложение
                     System.out.println("Принято предложение №" + proposal);
                     thisProposal = proposal;
                 }
-
             }
         }
     }
